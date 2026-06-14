@@ -9,24 +9,24 @@ const Footer = () => {
 
   return (
     <footer className="w-full relative overflow-hidden bg-brand-black border-t border-white/5 pt-10 pb-6 font-sans selection:bg-brand-orange selection:text-white">
-      
+
       {/* Brillo de fondo sutil */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-32 bg-brand-orange/10 blur-[100px] pointer-events-none" />
 
       <div className="container-max px-6 relative z-10">
-        
+
         {/* LAYOUT PRINCIPAL */}
         <div className="flex flex-col items-center text-center md:grid md:grid-cols-12 md:text-left gap-y-10 gap-x-2 md:gap-8 mb-8 md:mb-10 w-full">
-          
+
           {/* Logo y Redes */}
           <div className="md:col-span-12 lg:col-span-4 flex flex-col items-center md:items-start gap-5 md:gap-4 w-full">
-            <img 
-              src={logo4} 
-              alt="AudioElectroCar Logo" 
+            <img
+              src={logo4}
+              alt="AudioElectroCar Logo"
               className="h-16 md:h-20 w-auto object-contain filter drop-shadow-[0_0_20px_rgba(249,115,22,0.3)] brightness-115 contrast-110"
             />
             <p className="hidden md:block text-white/40 text-[11px] md:text-sm font-light leading-relaxed max-w-sm">
-              Distribuidor mayorista y minorista integral. Evolución tecnológica a tu alcance con envíos seguros a toda la República Argentina.
+              Distribuidor mayorista y minorista integral. Evolución tecnológica a tu alcance con envíos seguros a toda la República Argentina.    V.1.0.1
             </p>
             <div className="flex gap-4">
               <a href="#" aria-label="Facebook" className="w-10 h-10 rounded-full md:rounded-[1rem] bg-white/5 border border-white/10 flex items-center justify-center text-white/50 md:text-white/40 hover:bg-brand-orange hover:text-white hover:border-brand-orange md:hover:shadow-[0_10px_20px_rgba(249,115,22,0.2)] transition-all duration-300 group">
@@ -66,7 +66,7 @@ const Footer = () => {
                   <MapPin size={10} className="md:w-3 md:h-3" />
                 </div>
                 <MapPin size={14} className="md:hidden text-brand-orange" />
-                <span className="mt-0 md:mt-0.5">Manuel Estrada 2177, CP 4000<br className="hidden md:block"/>Tucumán</span>
+                <span className="mt-0 md:mt-0.5">Manuel Estrada 2177, CP 4000<br className="hidden md:block" />Tucumán</span>
               </div>
               <div className="flex items-center md:items-start gap-2 md:gap-3 group">
                 <div className="hidden md:flex w-6 h-6 md:w-7 md:h-7 rounded-full bg-white/5 items-center justify-center text-brand-orange flex-shrink-0 group-hover:bg-brand-orange group-hover:text-brand-black transition-colors">
@@ -89,13 +89,13 @@ const Footer = () => {
         {/* Separador */}
         <div className="md:hidden w-full h-px bg-white/10 mb-6" />
         <div className="hidden md:block pt-8 border-t border-white/10" />
-        
+
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-bold">
             © {currentYear} AudioElectroCar. Todos los derechos reservados.
           </p>
-          <Link 
-            to="/admin" 
+          <Link
+            to="/admin"
             className="text-[10px] text-white/10 hover:text-brand-orange uppercase tracking-[0.2em] font-bold transition-colors"
             aria-label="Acceso Administrador"
           >
