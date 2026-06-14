@@ -218,8 +218,8 @@ const Home = () => {
                   key={i}
                   onClick={() => handlePageChange(i + 1)}
                   className={`w-10 h-10 rounded-xl font-black text-xs transition-all ${currentPage === i + 1
-                      ? 'bg-brand-orange text-white border-brand-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]'
-                      : 'bg-white/5 border border-white/10 text-white/40 hover:bg-white/10 hover:text-white'
+                    ? 'bg-brand-orange text-white border-brand-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]'
+                    : 'bg-white/5 border border-white/10 text-white/40 hover:bg-white/10 hover:text-white'
                     }`}
                 >
                   {i + 1}
@@ -313,7 +313,7 @@ const Home = () => {
           <div className="space-y-4 text-center md:text-left relative z-10">
             <h3 className="text-3xl md:text-4xl font-display font-black text-white uppercase italic tracking-tight">Accede a nuestro <span className="text-brand-orange">Catálogo</span></h3>
             <p className="text-white/50 max-w-md font-light">
-              Ventas Online 24/7. Descubre nuestros precios competitivos a mayorista, actualizados en tiempo real.   V.1.0.0
+              Ventas Online 24/7. Descubre nuestros precios competitivos a mayorista, actualizados en tiempo real.   V.1.0.1
             </p>
           </div>
 
