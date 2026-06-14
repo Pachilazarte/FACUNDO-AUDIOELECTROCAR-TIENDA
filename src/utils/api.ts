@@ -2,55 +2,6 @@ import { Product, Pedido, User, Config } from '../types';
 
 const API_URL = import.meta.env.VITE_GAS_API_URL;
 
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: 'PROD-001',
-    nombre: 'Subwoofer Premium Pro-X',
-    descripcion: 'Bajos profundos y controlados con diafragma de fibra de carbono. Ideal para sistemas de alta fidelidad.',
-    categoria: 'audio',
-    precio: 145000,
-    imagenUrl: 'https://images.unsplash.com/photo-1545453343-ae6a3a99252c?auto=format&fit=crop&q=80&w=800',
-    destacado: true,
-    masVendido: true,
-    novedad: true,
-    activo: true
-  },
-  {
-    id: 'PROD-002',
-    nombre: 'Receptor Digital SmartDrive',
-    descripcion: 'Pantalla táctil de 9 pulgadas con Android Auto y Apple CarPlay inalámbrico.',
-    categoria: 'electrodomesticos',
-    precio: 210900,
-    imagenUrl: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800',
-    destacado: true,
-    masVendido: false,
-    novedad: true,
-    activo: true
-  },
-  {
-    id: 'PROD-003',
-    nombre: 'Amplificador Titan 800W',
-    descripcion: 'Potencia pura de 4 canales clase D con disipador térmico de aluminio cepillado.',
-    categoria: 'audio',
-    precio: 189500,
-    imagenUrl: 'https://images.unsplash.com/photo-1616428236113-56903328e37b?auto=format&fit=crop&q=80&w=800',
-    destacado: false,
-    masVendido: true,
-    novedad: false,
-    activo: true
-  }
-];
-
-const MOCK_CONFIG: Config = {
-  nombreTienda: "AutoSound Store",
-  qrImagenUrl: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.mercadopago.com.ar",
-  cbu: "0000003100094857362514",
-  aliasCBU: "AUTOSOUND.STORE.MP",
-  whatsappContacto: "5493812345678",
-  textoBienvenida: "Sonó bien. Se ve mejor.",
-  textoQuienesSomos: "En AutoSound Store, no solo vendemos audio; calibramos experiencias sensoriales para audiófilos exigentes."
-};
-
 /**
  * Todos los requests van como GET con parámetros en la URL.
  * Esto evita el problema de CORS preflight que bloquea los POST
@@ -58,11 +9,11 @@ const MOCK_CONFIG: Config = {
  */
 async function fetchGAS<T>(params: Record<string, string>): Promise<T> {
   if (!API_URL) {
-    console.warn('VITE_GAS_API_URL no está definida. Usando datos mock.');
+    console.warn('VITE_GAS_API_URL no está definida. No se pueden cargar los datos reales del backend.');
     const action = params.action;
-    if (action === 'getProductos') return MOCK_PRODUCTS as unknown as T;
-    if (action === 'getConfiguracion') return MOCK_CONFIG as unknown as T;
-    if (action === 'loginAdmin') return { success: true, user: { usuario: 'Admin Mock', id: '1', rol: 'ADMIN' } } as unknown as T;
+    if (action === 'getProductos') return [] as unknown as T;
+    if (action === 'getConfiguracion') return {} as unknown as T;
+    if (action === 'loginAdmin') return { success: false } as unknown as T;
     return [] as unknown as T;
   }
 
@@ -85,11 +36,8 @@ async function fetchGAS<T>(params: Record<string, string>): Promise<T> {
 
 async function postGAS<T>(body: Record<string, any>): Promise<T> {
   if (!API_URL) {
-    console.warn('VITE_GAS_API_URL no está definida. Usando datos mock.');
-    if (body.action === 'crearProducto') {
-      return { success: true, id: 'PROD-' + Math.floor(Math.random() * 1000) } as unknown as T;
-    }
-    return { success: true } as unknown as T;
+    console.warn('VITE_GAS_API_URL no está definida. No se pudo guardar.');
+    return { success: false } as unknown as T;
   }
 
   try {
