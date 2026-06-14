@@ -1,21 +1,14 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { X, ShoppingCart, Zap, ShieldCheck, Info, Share2 } from 'lucide-react';
+import { X, ShoppingBag, ShieldCheck } from 'lucide-react';
 import { Product } from '../../types';
 import { useCart } from '../../context/CartContext';
+import { getCleanImageUrl, parsePrice } from '../../pages/admin/priceUtils';
 
 interface VisualizerProps {
   product: Product;
   onClose: () => void;
 }
-
-const parsePrice = (val: any): number => {
-  if (typeof val === 'number') return val;
-  if (!val) return 0;
-  const strVal = String(val);
-  const cleaned = strVal.replace(/\$/g, '').replace(/\./g, '').replace(/\s/g, '').replace(/,/g, '.');
-  return parseFloat(cleaned) || 0;
-};
 
 const ProductCardVisualizer: React.FC<VisualizerProps> = ({ product, onClose }) => {
   const { addToCart } = useCart();
@@ -25,112 +18,101 @@ const ProductCardVisualizer: React.FC<VisualizerProps> = ({ product, onClose }) 
   const isLowStock = stockCount > 0 && stockCount <= 3;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 font-sans selection:bg-brand-orange">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-6 lg:p-12 font-sans selection:bg-brand-orange selection:text-white">
       {/* Backdrop con desenfoque de cristal */}
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="absolute inset-0 bg-brand-black/60 backdrop-blur-xl"
+        className="absolute inset-0 bg-brand-black/70 backdrop-blur-md"
       />
 
-      {/* Contenedor Modal Refinado */}
+      {/* Contenedor Modal (Identidad de Marca + Premium) */}
       <motion.div 
-        initial={{ opacity: 0, scale: 0.98, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.98, y: 10 }}
-        className="bg-white rounded-[3rem] w-full max-w-5xl overflow-hidden flex flex-col md:flex-row relative z-10 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border border-white/10"
+        initial={{ opacity: 0, y: 40, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 40, scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="bg-white w-full h-full md:h-auto md:h-[85vh] md:max-w-6xl lg:max-w-[1400px] md:rounded-[2.5rem] overflow-y-auto md:overflow-hidden flex flex-col md:flex-row relative z-10 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.25)] border border-white/20 custom-scrollbar"
       >
-        {/* Botón Cerrar Minimalista */}
+        {/* Botón Cerrar (Estilo AudioElectroCar) */}
         <button 
           onClick={onClose}
-          className="absolute top-6 right-6 z-30 w-10 h-10 bg-brand-gray-light rounded-full flex items-center justify-center text-brand-black/40 hover:text-brand-orange hover:bg-white transition-all shadow-sm active:scale-90"
+          className="fixed md:absolute top-4 right-4 md:top-8 md:right-8 z-50 w-11 h-11 md:w-14 md:h-14 bg-white/90 md:bg-brand-gray-light backdrop-blur-md rounded-full flex items-center justify-center text-brand-black/40 hover:text-brand-orange hover:bg-white hover:shadow-lg transition-all active:scale-90 border border-brand-black/5"
         >
-          <X size={20} />
+          <X size={26} strokeWidth={2} />
         </button>
 
-        {/* LADO IZQUIERDO: EXHIBICIÓN (SLIM) */}
-        <div className="w-full md:w-[50%] bg-[#FDFCFB] p-8 md:p-12 flex flex-col items-center justify-center relative min-h-[350px] border-r border-brand-black/5">
-          <div className="absolute top-8 left-10 text-brand-black/[0.02] pointer-events-none select-none font-display font-black text-[10rem] italic uppercase tracking-tighter leading-none">
-            AEC
-          </div>
+        {/* LADO IZQUIERDO: IMAGEN CON GLOW SUTIL */}
+        <div className="w-full md:w-[55%] bg-brand-gray-light flex flex-col items-center justify-center relative min-h-[350px] md:min-h-full overflow-hidden">
+          {/* Brillo de fondo sutil naranja */}
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/5 to-transparent opacity-50 pointer-events-none" />
           
           <motion.img 
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            src={product.imagenUrl} 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
+            src={getCleanImageUrl(product.imagenUrl)} 
             alt={product.nombre} 
-            className="w-full h-auto max-h-[400px] object-contain relative z-10 mix-blend-multiply drop-shadow-xl" 
+            className="w-full h-full object-cover md:object-contain p-0 md:p-20 lg:p-28 absolute inset-0 md:relative mix-blend-multiply drop-shadow-2xl z-10" 
           />
           
-          <div className="absolute bottom-8 left-8">
-            <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl border border-brand-black/5 flex items-center gap-2 shadow-sm">
-               <ShieldCheck size={16} className="text-brand-orange" />
-               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-brand-black/40">Garantía Certificada</span>
+          <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 hidden md:flex z-20">
+            <div className="px-4 py-2 md:px-6 md:py-3 rounded-xl border border-brand-black/5 bg-white/90 backdrop-blur-md flex items-center gap-3 shadow-md">
+               <ShieldCheck size={20} className="text-brand-orange" />
+               <span className="text-[10px] md:text-xs font-black text-brand-black/60 uppercase tracking-[0.2em]">Garantía Oficial</span>
             </div>
           </div>
         </div>
 
-        {/* LADO DERECHO: CONTENIDO REFINADO */}
-        <div className="w-full md:w-[50%] p-8 md:p-14 flex flex-col bg-white">
+        {/* LADO DERECHO: TIPOGRAFÍA DE MARCA */}
+        <div className="w-full md:w-[45%] p-8 md:p-14 lg:p-20 xl:p-24 flex flex-col bg-[#FDFCFB]">
           <div className="flex-1">
-            <div className="flex items-center gap-4 mb-6">
-               <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-lg ${isLowStock ? 'bg-brand-orange/10 text-brand-orange' : 'bg-[#25D366]/10 text-[#25D366]'}`}>
-                 {isLowStock ? 'Últimas Unidades' : 'En Stock'}
+            <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+               <span className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] px-3 py-1.5 md:px-4 md:py-2 rounded-lg ${isLowStock ? 'bg-brand-orange/10 text-brand-orange' : 'bg-[#25D366]/10 text-[#25D366]'}`}>
+                 {isLowStock ? 'Últimas Unidades' : 'Stock Disponible'}
                </span>
-               <span className="text-[9px] font-bold text-brand-black/10 tracking-widest uppercase">ID: {product.id}</span>
+               <span className="text-[9px] md:text-[11px] font-bold text-brand-black/30 tracking-widest uppercase">ID: {product.id}</span>
             </div>
 
-            {/* Título con control de desborde */}
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-black text-brand-black italic mb-8 leading-[1.1] tracking-tight break-words">
+            {/* Título de Marca */}
+            <h2 className="text-2xl md:text-5xl lg:text-6xl font-display font-black text-brand-black mb-6 md:mb-10 leading-[1.1] tracking-tight">
               {product.nombre}
             </h2>
 
-            {/* Bloque de Descripción Estilizado */}
-            <div className="space-y-4 mb-10">
-              <div className="flex items-center gap-3">
-                 <div className="h-[2px] bg-brand-orange w-8" />
-                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-black/20">Descripción del Producto</h4>
+            {/* Precio de Marca */}
+            <div className="mb-10 md:mb-12 flex items-baseline gap-2">
+              <span className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-brand-orange tracking-tighter">
+                ${precioLimpio.toLocaleString()}
+              </span>
+            </div>
+
+            {/* Separador de Marca */}
+            <div className="w-full h-px bg-brand-black/5 mb-8 md:mb-12" />
+
+            {/* Descripción */}
+            <div className="mb-10 lg:mb-14">
+              <div className="flex items-center gap-3 mb-5 md:mb-6">
+                 <div className="h-[2px] bg-brand-orange w-6 md:w-8" />
+                 <h4 className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-brand-black/40">Acerca del Producto</h4>
               </div>
-              <div className="bg-brand-gray-light/30 p-6 rounded-[2rem] border border-brand-black/5 relative group">
-                <div className="absolute -right-2 -top-2 opacity-[0.02] pointer-events-none group-hover:opacity-5 transition-opacity">
-                  <Info size={100} strokeWidth={1} />
-                </div>
-                <p className="text-[14px] md:text-[15px] font-medium text-brand-black/50 leading-relaxed italic relative z-10">
-                  "{product.descripcion || "Este componente ha sido seleccionado por AudioElectroCar para elevar la experiencia sonora de tu vehículo."}"
-                </p>
-              </div>
+              <p className="text-sm md:text-lg lg:text-xl font-medium text-brand-black/60 leading-relaxed italic">
+                "{product.descripcion || "Componente premium seleccionado para una integración perfecta y rendimiento superior en su vehículo. Diseñado para ofrecer durabilidad y excelencia técnica."}"
+              </p>
             </div>
           </div>
 
-          {/* Footer del Modal */}
-          <div className="pt-8 border-t border-brand-black/5 flex flex-col gap-8">
-            <div className="flex flex-col">
-              <span className="text-[10px] font-black text-brand-black/20 uppercase tracking-[0.3em] mb-1">Inversión Final</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl md:text-6xl font-display font-black text-brand-orange italic tracking-tighter leading-none">
-                  ${precioLimpio.toLocaleString()}
-                </span>
-                <span className="text-xs font-bold text-brand-black/20 uppercase tracking-widest italic">ars</span>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <button 
-                disabled={!product.activo}
-                onClick={() => { addToCart(product); onClose(); }}
-                className="flex-1 bg-brand-black text-white py-5 rounded-[1.8rem] font-display font-black uppercase tracking-[0.2em] text-[11px] hover:bg-brand-orange active:scale-[0.97] transition-all shadow-xl flex items-center justify-center gap-4 disabled:opacity-20"
-              >
-                <ShoppingCart size={20} />
-                {product.activo ? 'Agregar al Pedido' : 'Agotado'}
-              </button>
-              
-              <button className="w-16 h-16 bg-brand-gray-light text-brand-black/40 rounded-[1.8rem] flex items-center justify-center hover:bg-white hover:text-brand-orange hover:shadow-md transition-all shadow-inner border border-brand-black/5">
-                <Share2 size={20} />
-              </button>
-            </div>
+          {/* Botón de Acción de Marca */}
+          <div className="pt-6 md:pt-10 mt-auto">
+            <button 
+              disabled={!product.activo}
+              onClick={() => { addToCart(product); onClose(); }}
+              className="w-full bg-brand-black text-white py-5 md:py-7 lg:py-8 rounded-[1.5rem] md:rounded-[2rem] font-display font-black uppercase tracking-[0.2em] text-[11px] md:text-[14px] lg:text-[16px] hover:bg-brand-orange hover:shadow-[0_15px_30px_rgba(249,115,22,0.3)] active:scale-[0.98] transition-all flex items-center justify-center gap-3 md:gap-4 disabled:bg-brand-gray-light disabled:text-brand-black/30 disabled:cursor-not-allowed disabled:shadow-none"
+            >
+              <ShoppingBag size={24} className="md:w-7 md:h-7" />
+              {product.activo ? 'Agregar al Pedido' : 'Agotado'}
+            </button>
           </div>
         </div>
       </motion.div>

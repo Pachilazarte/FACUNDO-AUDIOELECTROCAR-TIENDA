@@ -7,7 +7,7 @@ export interface Product {
   id: string;
   nombre: string;
   descripcion: string;
-  categoria: 'audio' | 'accesorios-auto' | 'electrodomesticos';
+  categoria: string;
   precio: number;
   imagenUrl: string;
   destacado: boolean;

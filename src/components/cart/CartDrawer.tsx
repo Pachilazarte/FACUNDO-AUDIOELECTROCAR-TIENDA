@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Trash2, Plus, Minus, ArrowRight, ShoppingBag, ShieldCheck, Tag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { getCleanImageUrl } from '../../pages/admin/priceUtils';
 
 /**
  * Función robusta para limpiar precios de Google Sheets.
@@ -137,7 +138,7 @@ const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                     >
                       {/* Imagen del Producto */}
                       <div className="h-24 w-24 sm:w-28 sm:h-28 flex-shrink-0 bg-brand-gray-light rounded-[1rem] overflow-hidden relative border border-brand-black/5 mx-auto sm:mx-0">
-                        <img src={item.imagenUrl} alt={item.nombre} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <img src={getCleanImageUrl(item.imagenUrl)} alt={item.nombre} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                       </div>
                       
                       {/* Detalles del Producto */}

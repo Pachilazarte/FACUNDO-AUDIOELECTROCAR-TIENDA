@@ -1,0 +1,79 @@
+=========================================================
+      MANUAL OFICIAL - AUTOSOUND STORE & SOLUTIONS
+=========================================================
+Plataforma E-commerce Premium Integrada con Google Sheets
+
+Este documento detalla el funcionamiento estético y práctico
+de la plataforma, tanto para los clientes que la visitan
+como para el administrador que la gestiona.
+
+---------------------------------------------------------
+ PARTE 1: MANUAL DEL CLIENTE (Experiencia de Usuario)
+---------------------------------------------------------
+
+1. ESTÉTICA Y DISEÑO PREMIUM
+La plataforma utiliza un diseño "Dark Mode" de alta gama (Negro, Naranja vibrante y detalles en cristal). Todas las interacciones están acompañadas de animaciones suaves para que parezca una aplicación nativa.
+- Carga Ultra-rápida (Caché): El sistema guarda los productos en la memoria del celular/PC. Al entrar, todo carga al instante y se actualiza en segundo plano sin parpadeos.
+
+2. CATÁLOGO INTELIGENTE
+- Filtros dinámicos: Los usuarios pueden filtrar por categorías (Audio, Repuestos, etc.) y buscar por texto libre.
+- Ordenamiento automático: Se pueden ordenar productos por Más Relevantes, Menor/Mayor precio, etc.
+- Indicadores Visuales de Stock:
+  * Si hay 3 o menos unidades: Aparece un cartel naranja "¡Se agota pronto!" latiendo.
+  * Si el stock es 0 (Agotado): La tarjeta se pone en blanco y negro, el botón se bloquea y aparece un cartel "SIN STOCK".
+
+3. PROCESO DE COMPRA (Checkout)
+Paso 1: El cliente revisa su carrito, completa un formulario limpio y profesional con sus datos de envío.
+Paso 2: La pantalla muestra el código QR para el pago directo, con los valores exactos calculados.
+Paso 3: Un botón mágico prepara un mensaje automático para WhatsApp con todo el resumen del pedido para cerrar la venta con el asesor.
+Pantalla Final: Una pantalla completa blanca notifica el éxito de la operación.
+
+---------------------------------------------------------
+ PARTE 2: MANUAL DEL ADMINISTRADOR (PANEL DE CONTROL)
+---------------------------------------------------------
+
+1. ¿CÓMO ACCEDER AL PANEL?
+Para mantener la seguridad y estética, no hay botones gigantes de "Login".
+Baja hasta el final de la página web (el Pie de Página). A la derecha del texto "Todos los derechos reservados", verás una palabra muy oscura que dice "ADMIN". Haz clic ahí para entrar al panel de control de forma secreta.
+
+El panel de administrador está dividido en varias pestañas operativas:
+
+2. CARGA Y EDICIÓN DE PRODUCTOS (Pestaña "Productos")
+Todo se gestiona visualmente desde aquí sin tocar código ni romper el Google Sheets.
+- ID: Si lo dejas vacío al crear uno nuevo, el sistema le asigna uno automático.
+- Nombre y Descripción: Sé claro y persuasivo.
+- Categoría: Usa categorías consistentes (ej: "audio", "herramientas") para que el catálogo no se desordene.
+- Precio: Ingresa solo números, SIN puntos ni signos de peso. (Correcto: 145000 / Incorrecto: $145.000).
+- Stock Inicial: Cantidad de unidades físicas.
+- Activo vs Inactivo: Oculta temporalmente productos de la vista pública sin tener que borrarlos.
+- Etiquetas (Novedad): Marcarlo le pondrá un cartel llamativo de "Nuevo" en la tienda.
+- URL de Imagen: Pegar el enlace web de la foto (idealmente enlaces de Drive u hosting externo).
+
+3. CONTROL DE INVENTARIO Y STOCK (Pestaña "Stock")
+Esta pestaña está diseñada para la rapidez operativa del día a día (Ingreso de nueva mercadería).
+- Alertas Inteligentes: En la parte superior verás contadores de "Stock Crítico" (5 unidades o menos) y "Sin Stock".
+- Ajuste Rápido (+ / -): No necesitas editar todo el producto para cambiar el stock. Desde la lista, puedes sumar o restar unidades de manera ultra rápida con los botones verdes y rojos. El cambio impacta al instante.
+- Habilitar/Deshabilitar Rápido: Botón directo para apagar un producto del catálogo en un clic si descubres que hay algún fallo o faltante.
+- Visibilidad Crítica: Los productos con bajo stock se resaltan con fondo naranja o rojo para que sepas qué debes reponer urgente al comprar mercadería.
+
+4. CONTROL DE VENTAS, GASTOS Y REPORTES (Pestaña "Ventas")
+Aquí es donde controlas la salud financiera y los balances del negocio a partir de los pedidos procesados.
+- Ticket Promedio: Muestra estadísticamente cuánto gastan tus clientes por compra.
+- Ventas Últimos 30 Días: Calcula los ingresos generados en el mes actual para medir el rendimiento.
+- Total Histórico: La suma de todo el dinero ingresado.
+- Botón "Exportar CSV": En la esquina superior derecha tienes un botón para descargar toda la tabla de ventas a Excel/CSV. Usa este archivo para cruzarlo con tus gastos fijos/variables, enviárselo a tu contador o calcular tu rentabilidad mensual (ROI).
+
+5. GESTIÓN DE PEDIDOS Y LOGÍSTICA (Pestaña "Pedidos")
+Cada vez que un cliente completa el Checkout, la información impacta aquí.
+- Podrás ver el cliente, contacto, productos y montos.
+- Flujos de Estado: Mueve el pedido desde "Pendiente" a "Confirmado" o "Enviado". 
+*Importante*: Solo los pedidos que pases a estado "Confirmado" sumarán facturación en tu pestaña de Ventas.
+
+6. CONFIGURACIÓN GENERAL (Pestaña "Ajustes")
+- Aquí puedes cambiar tu CBU para transferencias, el alias, el número de WhatsApp receptor, y los textos de bienvenida de tu web sin depender de ningún desarrollador.
+
+7. REGLAS DE ORO PARA EL CUIDADO DEL SISTEMA
+- NO alteres las Cabeceras en Google Sheets: El sistema busca los títulos exactos en la Fila 1 (id, nombre, precio, stock). Si renombras o borras esas columnas de la hoja de cálculo de Google directamente, la tienda dejará de funcionar.
+- Cuida tus imágenes: Usa fotos en formato cuadrado (1:1) o proporciones similares para que el catálogo no se vea con tamaños desiguales.
+- Usa Siempre el Panel Web: Haz los cambios de precios y cargas de stock desde el Panel Admin de tu página en lugar de abrir el Excel. El panel tiene validaciones de seguridad automáticas que impiden que ingreses datos erróneos (como poner letras en un campo de precios) que podrían quebrar la plataforma.
+

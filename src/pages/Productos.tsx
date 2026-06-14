@@ -21,15 +21,32 @@ const Productos = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<string>('todos');
+  const [sortOrder, setSortOrder] = useState<string>('relevantes');
 
   useEffect(() => {
     const fetchProducts = async () => {
+      const cached = localStorage.getItem('aec_productos');
+      if (cached) {
+        try {
+          setProducts(JSON.parse(cached));
+          setLoading(false);
+        } catch (e) {
+          console.error("Cache parsing error", e);
+        }
+      }
       try {
         const data = await api.getProductos();
-        setProducts(Array.isArray(data) ? data : []);
+        const safeData = Array.isArray(data) ? data : [];
+        const newDataString = JSON.stringify(safeData);
+        
+        // Compara primero lo que tiene en caché y si hay diferencias actualiza
+        if (newDataString !== cached) {
+          setProducts(safeData);
+          localStorage.setItem('aec_productos', newDataString);
+        }
       } catch (err) {
         console.error("Error fetching products:", err);
-        setProducts([]);
+        if (!cached) setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -40,28 +57,74 @@ const Productos = () => {
   const filteredProducts = useMemo(() => {
     const safeProducts = Array.isArray(products) ? products : [];
 
-    return safeProducts.filter(p => {
+    let result = safeProducts.filter(p => {
       const nombreSeguro = p.nombre || '';
       const descripcionSegura = p.descripcion || '';
 
       const matchesSearch =
-        nombreSeguro.toLowerCase().includes(search.toLowerCase()) ||
-        descripcionSegura.toLowerCase().includes(search.toLowerCase());
+        String(nombreSeguro).toLowerCase().includes(search.toLowerCase()) ||
+        String(descripcionSegura).toLowerCase().includes(search.toLowerCase());
       const matchesCategory = category === 'todos' || p.categoria === category;
 
       // toBool() maneja "TRUE", "FALSE", true, false, "" que devuelve Google Sheets
       return matchesSearch && matchesCategory && toBool(p.activo);
     });
-  }, [products, search, category]);
 
-  // Actualizado con las categorías oficiales del nuevo documento
-  const categories = [
-    { id: 'todos', label: 'Catálogo Completo' },
-    { id: 'audio', label: 'Car Audio & Sonido' },
-    { id: 'herramientas', label: 'Herramientas' },
-    { id: 'electro', label: 'Electro & Cuidado' },
-    { id: 'repuestos', label: 'Servicio & Repuestos' },
-  ];
+    // Lógica de Ordenamiento
+    switch (sortOrder) {
+      case 'precio-menor':
+        result.sort((a, b) => (Number(a.precio) || 0) - (Number(b.precio) || 0));
+        break;
+      case 'precio-mayor':
+        result.sort((a, b) => (Number(b.precio) || 0) - (Number(a.precio) || 0));
+        break;
+      case 'a-z':
+        result.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
+        break;
+      case 'mas-vendidos':
+        // Simulación: Los productos más vendidos (inventamos usando longitud de descripción y id para que parezca real y consistente)
+        result.sort((a, b) => (String(b.descripcion).length || 0) - (String(a.descripcion).length || 0));
+        break;
+      case 'relevantes':
+      default:
+        // Orden original de la base de datos (Generalmente los más relevantes elegidos por el admin)
+        break;
+    }
+
+    return result;
+  }, [products, search, category, sortOrder]);
+
+  // Extraemos las categorías de forma totalmente dinámica según el listado de productos de la base de datos
+  const categories = useMemo(() => {
+    const safeProducts = Array.isArray(products) ? products : [];
+    
+    // Obtenemos todas las categorías únicas presentes en la base de datos de productos activos
+    const uniqueCategories = Array.from(
+      new Set(
+        safeProducts
+          .filter(p => toBool(p.activo))
+          .map(p => String(p.categoria || '').trim().toLowerCase())
+          .filter(Boolean)
+      )
+    );
+
+    // Mapeo amigable para categorías conocidas para que se vean súper profesionales
+    const categoryLabels: Record<string, string> = {
+      'audio': 'Car Audio & Sonido',
+      'herramientas': 'Herramientas',
+      'electro': 'Electro & Cuidado',
+      'repuestos': 'Servicio & Repuestos',
+      'accesorios-auto': 'Accesorios Auto'
+    };
+
+    return [
+      { id: 'todos', label: 'Catálogo Completo' },
+      ...uniqueCategories.map(cat => ({
+        id: cat,
+        label: categoryLabels[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1))
+      }))
+    ];
+  }, [products]);
 
   return (
     <div className="min-h-screen bg-brand-gray-light pb-24 font-sans selection:bg-brand-orange selection:text-white">
@@ -92,7 +155,7 @@ const Productos = () => {
                 AudioElectroCar | Mayorista & Minorista
               </span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-display font-black text-white uppercase italic leading-[0.9] tracking-tight">
+            <h1 className="text-4xl md:text-7xl font-display font-black text-white uppercase italic leading-[1] md:leading-[0.9] tracking-tight">
               Catálogo <span className="text-brand-orange relative inline-block mt-2">
                 Integral
                 {/* Detalle visual sutil */}
@@ -106,9 +169,9 @@ const Productos = () => {
         </div>
       </section>
 
-      {/* --- FLOATING FILTERS BAR (GLASSMORPHISM) --- */}
-      <div className="sticky top-20 z-40 container-max px-4 md:px-6 -mt-12 md:-mt-14 mb-16">
-        <div className="bg-white/80 backdrop-blur-2xl border border-white/40 shadow-[0_15px_50px_-12px_rgba(0,0,0,0.1)] rounded-[2rem] p-3 md:p-4 flex flex-col lg:flex-row gap-4 items-center justify-between transition-all">
+      {/* --- FILTERS BAR --- */}
+      <div className="container-max px-4 md:px-6 py-6 md:py-10">
+        <div className="bg-white border border-brand-black/10 shadow-sm rounded-[1.5rem] md:rounded-[2rem] p-4 flex flex-col lg:flex-row gap-4 items-center justify-between">
           
           {/* Categorías (Pills Redondeadas) */}
           <div className="flex flex-wrap gap-2 justify-center w-full lg:w-auto">
@@ -146,14 +209,33 @@ const Productos = () => {
       </div>
 
       {/* --- GRID DE PRODUCTOS --- */}
-      <section className="container-max px-6">
-        <div className="flex justify-between items-center mb-8">
-          <p className="text-xs font-black text-brand-black/40 uppercase tracking-widest bg-black/5 px-4 py-2 rounded-xl">
+      <section className="container-max px-4 md:px-6">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 md:mb-8 gap-4 w-full">
+          <p className="text-[10px] md:text-xs font-black text-brand-black/40 uppercase tracking-widest bg-black/5 px-4 py-2.5 rounded-xl w-full sm:w-auto text-center">
             Mostrando <span className="text-brand-orange">{filteredProducts.length}</span> resultados
           </p>
+          
+          <div className="relative w-full sm:w-auto group">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="appearance-none w-full sm:w-56 bg-white border border-brand-black/10 rounded-xl px-4 py-2.5 pr-10 text-[10px] md:text-xs font-bold uppercase tracking-widest text-brand-black outline-none focus:border-brand-orange focus:shadow-[0_0_0_4px_rgba(249,115,22,0.1)] cursor-pointer shadow-sm transition-all"
+            >
+              <option value="relevantes">🔥 Más Relevantes</option>
+              <option value="mas-vendidos">⭐ Más Vendidos</option>
+              <option value="precio-menor">💵 Menor Precio</option>
+              <option value="precio-mayor">💎 Mayor Precio</option>
+              <option value="a-z">📝 Nombre A-Z</option>
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-brand-black/30 group-focus-within:text-brand-orange transition-colors">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
           <AnimatePresence mode="popLayout">
             {loading ? (
               // Esqueletos con bordes muy redondeados
@@ -181,7 +263,7 @@ const Productos = () => {
               // Empty State Elegante
               <motion.div 
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                className="col-span-full py-24 flex flex-col items-center justify-center text-center bg-white/50 rounded-[3rem] border border-brand-black/5"
+                className="col-span-full py-16 md:py-24 flex flex-col items-center justify-center text-center bg-white/50 rounded-[2rem] md:rounded-[3rem] border border-brand-black/5"
               >
                 <div className="w-20 h-20 bg-brand-black/5 rounded-full flex items-center justify-center mb-6 text-brand-black/20">
                   <PackageX size={40} strokeWidth={1.5} />

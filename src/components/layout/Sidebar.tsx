@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Home, Grid, Info, Zap, ShieldCheck, MessageSquare } from 'lucide-react';
+import { X, Home, Grid, Info, ShieldCheck, MessageSquare } from 'lucide-react';
+import logo1 from '../../img/logo1.webp';
 
 const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const location = useLocation();
@@ -26,7 +27,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
             onClick={onClose}
             className="fixed inset-0 bg-brand-black/60 backdrop-blur-md z-[100]"
           />
-          
+
           {/* Panel del Menú Lateral (Desliza desde la izquierda) */}
           <motion.aside
             initial={{ x: '-100%' }}
@@ -41,40 +42,38 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
 
             {/* Header del Menú */}
             <div className="p-6 md:p-8 border-b border-white/5 flex justify-between items-center bg-white/5 backdrop-blur-xl relative z-10">
-              <Link to="/" onClick={onClose} className="flex items-center gap-3 group outline-none">
-                <div className="w-10 h-10 bg-brand-orange/10 rounded-xl flex items-center justify-center text-brand-orange shadow-inner border border-brand-orange/20 group-hover:bg-brand-orange group-hover:text-white transition-all duration-300">
-                  <Zap size={20} strokeWidth={2} />
-                </div>
-                <span className="font-display font-black text-xl uppercase italic tracking-tight text-white">
-                  AudioElectro<span className="text-brand-orange">Car</span>
-                </span>
+              <Link to="/" onClick={onClose} className="flex items-center outline-none">
+                <img
+                  src={logo1}
+                  alt="AudioElectroCar Logo"
+                  className="h-14 w-auto object-contain hover:opacity-95 transition-all duration-300 filter drop-shadow-[0_0_15px_rgba(249,115,22,0.4)] brightness-115 contrast-110"
+                />
               </Link>
-              
-              <button 
-                onClick={onClose} 
+
+              <button
+                onClick={onClose}
                 className="w-10 h-10 rounded-full bg-white/5 text-white/40 hover:bg-brand-orange hover:text-white transition-all flex items-center justify-center border border-white/10"
               >
                 <X size={20} />
               </button>
             </div>
-            
+
             {/* Navegación Principal */}
             <nav className="flex flex-col p-6 gap-2 relative z-10 flex-grow">
               <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-bold mb-4 ml-2">Menú Principal</p>
-              
+
               {links.map((link) => {
                 const isActive = location.pathname === link.path;
-                
+
                 return (
                   <Link
                     key={link.path}
                     to={link.path}
                     onClick={onClose}
-                    className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 outline-none group ${
-                      isActive 
-                        ? 'bg-brand-orange text-white shadow-[0_10px_20px_-10px_rgba(249,115,22,0.5)]' 
-                        : 'bg-transparent text-white/60 hover:bg-white/5 hover:text-white border border-transparent hover:border-white/10'
-                    }`}
+                    className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 outline-none group ${isActive
+                      ? 'bg-brand-orange text-white shadow-[0_10px_20px_-10px_rgba(249,115,22,0.5)]'
+                      : 'bg-transparent text-white/60 hover:bg-white/5 hover:text-white border border-transparent hover:border-white/10'
+                      }`}
                   >
                     <div className={`flex items-center justify-center ${isActive ? 'text-white' : 'text-brand-orange group-hover:scale-110 transition-transform'}`}>
                       {link.icon}
@@ -82,7 +81,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
                     <span className="text-sm font-display font-bold uppercase tracking-[0.2em] mt-0.5">
                       {link.name}
                     </span>
-                    
+
                     {/* Flecha indicadora pequeña a la derecha */}
                     <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
                       <ChevronRightIcon size={14} className={isActive ? 'text-white/50' : 'text-white/30'} />
@@ -91,13 +90,13 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
                 );
               })}
             </nav>
-            
+
             {/* Footer del Menú (Contacto rápido y confianza) */}
             <div className="p-6 md:p-8 border-t border-white/5 bg-white/5 backdrop-blur-md relative z-10">
               <div className="flex flex-col gap-4">
-                <a 
-                  href="https://wa.me/5493813336575" 
-                  target="_blank" 
+                <a
+                  href="https://wa.me/5493813336575"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-2xl bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-all duration-300 group"
                 >
@@ -127,7 +126,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
 // Pequeño componente helper para la flecha sin importar otro icono de lucide arriba
 const ChevronRightIcon = ({ size, className }: { size: number, className: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="m9 18 6-6-6-6"/>
+    <path d="m9 18 6-6-6-6" />
   </svg>
 );
 

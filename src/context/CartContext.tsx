@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '../types';
+import { parsePrice } from '../pages/admin/priceUtils';
 
 interface CartItem extends Product {
   quantity: number;
@@ -56,7 +57,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearCart = () => setItems([]);
 
   const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
-  const totalPrice = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
+  const totalPrice = items.reduce((acc, item) => acc + (parsePrice(item.precio) * item.quantity), 0);
 
   return (
     <CartContext.Provider value={{

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { api } from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
-import { Lock, User as UserIcon, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Lock, User as UserIcon, AlertCircle, ChevronLeft } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
+import logo2 from '../../img/logo2.webp';
 
 const AdminLogin = () => {
   const [usuario, setUsuario] = useState('');
@@ -34,65 +35,99 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-brand-black flex items-center justify-center p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-navy/30 via-brand-black to-brand-black">
+    <div className="min-h-screen bg-brand-black flex items-center justify-center p-6 relative overflow-hidden selection:bg-brand-orange selection:text-white">
+      {/* Fondo atmosférico */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(249,115,22,0.08),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(30,41,59,0.4),transparent_50%)]" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/5 blur-[120px] rounded-full pointer-events-none" />
+
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-white p-10 border-t-4 border-brand-orange shadow-2xl space-y-8"
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-md relative z-10"
       >
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-display font-black text-brand-black uppercase italic tracking-widest">Admin Access</h1>
-          <p className="text-[10px] text-brand-black/40 font-bold uppercase tracking-[0.2em]">AutoSound Store Control</p>
-        </div>
+        {/* Card glassmorphism */}
+        <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)]">
 
-        {error && (
-          <div className="bg-red-50 text-red-600 p-4 border-l-4 border-red-500 flex items-center gap-3">
-            <AlertCircle size={18} />
-            <span className="text-xs font-bold uppercase">{error}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-brand-black/50">Usuario</label>
-            <div className="relative">
-              <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-black/20" size={16} />
-              <input
-                required
-                value={usuario}
-                onChange={(e) => setUsuario(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-brand-gray-light border-2 border-transparent focus:border-brand-orange text-sm font-bold uppercase outline-none transition-all"
-                placeholder="ADMIN"
+          {/* Logo / Header */}
+          <div className="text-center space-y-4 mb-8">
+            <div className="relative flex items-center justify-center mb-6">
+              <div className="absolute w-36 h-36 bg-brand-orange/25 rounded-full blur-2xl opacity-80 pointer-events-none" />
+              <img 
+                src={logo2} 
+                alt="AudioElectroCar Mascot Logo" 
+                className="h-32 md:h-36 w-auto object-contain relative z-10 select-none filter drop-shadow-[0_10px_20px_rgba(249,115,22,0.15)]"
               />
             </div>
+            <h1 className="text-3xl font-display font-black text-white uppercase italic tracking-widest">
+              Admin Access
+            </h1>
+            <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.3em]">
+              AudioElectroCar · Panel de Control
+            </p>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-brand-black/50">Contraseña</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-black/20" size={16} />
-              <input
-                required
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-brand-gray-light border-2 border-transparent focus:border-brand-orange text-sm font-bold outline-none transition-all"
-                placeholder="••••••••"
-              />
+          {/* Error */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-red-500/10 text-red-400 p-4 rounded-2xl border border-red-500/20 flex items-center gap-3 mb-6"
+            >
+              <AlertCircle size={16} />
+              <span className="text-xs font-bold uppercase tracking-widest">{error}</span>
+            </motion.div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/40">Usuario</label>
+              <div className="relative">
+                <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={16} />
+                <input
+                  required
+                  value={usuario}
+                  onChange={(e) => setUsuario(e.target.value)}
+                  className="w-full pl-11 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white text-sm font-bold uppercase placeholder:text-white/20 outline-none focus:border-brand-orange/50 focus:bg-white/8 focus:shadow-[0_0_0_4px_rgba(249,115,22,0.1)] transition-all"
+                  placeholder="ADMIN"
+                />
+              </div>
             </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/40">Contraseña</label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={16} />
+                <input
+                  required
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-11 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white text-sm font-bold placeholder:text-white/20 outline-none focus:border-brand-orange/50 focus:shadow-[0_0_0_4px_rgba(249,115,22,0.1)] transition-all"
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full mt-2 bg-brand-orange text-white py-4 rounded-2xl font-display font-black uppercase tracking-widest text-sm hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+            >
+              {loading ? 'Verificando...' : 'Ingresar al Panel'}
+            </button>
+          </form>
+
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <Link to="/" className="text-[10px] text-white/30 hover:text-brand-orange font-bold uppercase tracking-[0.2em] flex items-center gap-2 transition-colors">
+              <ChevronLeft size={14} /> Volver a la Tienda
+            </Link>
+            <p className="text-center text-[8px] text-white/15 font-bold uppercase tracking-[0.3em]">
+              Acceso restringido a personal autorizado
+            </p>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-brand-orange text-white py-4 font-display font-black uppercase tracking-widest text-sm hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-          >
-            {loading ? 'Verificando...' : 'Ingresar'}
-          </button>
-        </form>
-
-        <div className="text-center pt-4">
-          <p className="text-[8px] text-brand-black/20 font-bold uppercase tracking-[0.3em]">Acceso restringido a personal autorizado</p>
         </div>
       </motion.div>
     </div>
